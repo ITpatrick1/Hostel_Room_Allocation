@@ -13,7 +13,7 @@ permissions:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.event.repository.name }}
+  IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/hostel-room-allocation
 
 jobs:
   code-quality:
