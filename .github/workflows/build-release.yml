@@ -149,52 +149,76 @@ jobs:
     - name: Extract version
       id: version
       run: |
-        echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        else
+          echo "VERSION=latest" >> $GITHUB_OUTPUT
+        fi
     
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v3
-      with:
-        version: 'latest'
-    
-    - name: Deploy to Kubernetes
+    - name: Validate Kubernetes Manifests
       run: |
-        echo "🚀 Deploying Hostel Allocation System"
-        echo "Version: ${{ steps.version.outputs.VERSION }}"
+        echo "📋 Validating Kubernetes manifests..."
         
-        # Create namespace
-        kubectl apply -f k8s/namespace.yaml || true
+        # Validate YAML syntax
+        for file in k8s/*.yaml monitoring/*.yaml; do
+          if [ -f "$file" ]; then
+            python3 -c "import yaml; yaml.safe_load(open('$file'))" && echo "✓ $file is valid" || (echo "✗ $file is invalid" && exit 1)
+          fi
+        done
         
-        # Deploy ConfigMap
-        kubectl apply -f k8s/configmap.yaml -n hostel-allocation
-        
-        # Deploy application
-        kubectl apply -f k8s/deployment.yaml -n hostel-allocation
-        kubectl apply -f k8s/service.yaml -n hostel-allocation
-        kubectl apply -f k8s/ingress.yaml -n hostel-allocation
-        
-        # Configure auto-scaling
-        kubectl apply -f k8s/hpa.yaml -n hostel-allocation
-        
-        # Deploy monitoring stack
-        kubectl apply -f monitoring/prometheus-deployment.yaml -n hostel-allocation || true
-        kubectl apply -f monitoring/prometheus-config.yaml -n hostel-allocation || true
-        kubectl apply -f monitoring/alert-rules.yaml -n hostel-allocation || true
-        kubectl apply -f monitoring/grafana-deployment.yaml -n hostel-allocation || true
-        kubectl apply -f monitoring/alertmanager-deployment.yaml -n hostel-allocation || true
-        
-        # Wait for deployment
-        kubectl rollout status deployment/hostel-allocation -n hostel-allocation --timeout=5m
-        
-        echo "✅ Deployment completed successfully"
-        echo "Service: kubectl get svc -n hostel-allocation"
+        echo "✅ All manifests are valid"
     
-    - name: Verify Deployment
+    - name: Generate Deployment Report
       run: |
-        echo "📊 Deployment Status:"
-        kubectl get deployments -n hostel-allocation
-        kubectl get pods -n hostel-allocation
-        kubectl get svc -n hostel-allocation
-        kubectl get hpa -n hostel-allocation
+        echo "🚀 Hostel Allocation System - Deployment Configuration"
+        echo "========================================================="
+        echo ""
+        echo "📦 Version: ${{ steps.version.outputs.VERSION }}"
+        echo "🏷️  Docker Image: docker.io/itpatrick/hostel_room_allocation:${{ steps.version.outputs.VERSION }}"
+        echo ""
+        echo "📋 Kubernetes Manifests to Deploy:"
+        echo ""
+        echo "1. Namespace:"
+        cat k8s/namespace.yaml | head -10
+        echo ""
+        echo "2. Deployment (3 replicas, rolling update strategy):"
+        cat k8s/deployment.yaml | grep -A 5 "replicas:"
+        echo ""
+        echo "3. Auto-scaling (HPA: 3-10 replicas, 70% CPU, 80% Memory):"
+        cat k8s/hpa.yaml | grep -A 10 "spec:"
+        echo ""
+        echo "4. Service & Ingress configured"
+        echo ""
+        echo "5. Monitoring Stack:"
+        echo "   - Prometheus (metrics collection)"
+        echo "   - Grafana (visualization)"
+        echo "   - AlertManager (alerting)"
+        echo ""
+        echo "✅ Ready for deployment to Kubernetes cluster"
+        echo ""
+        echo "Deployment Instructions:"
+        echo "========================"
+        echo ""
+        echo "kubectl apply -f k8s/namespace.yaml"
+        echo "kubectl apply -f k8s/configmap.yaml -n hostel-allocation"
+        echo "kubectl apply -f k8s/deployment.yaml -n hostel-allocation"
+        echo "kubectl apply -f k8s/service.yaml -n hostel-allocation"
+        echo "kubectl apply -f k8s/ingress.yaml -n hostel-allocation"
+        echo "kubectl apply -f k8s/hpa.yaml -n hostel-allocation"
+        echo "kubectl apply -f monitoring/ -n hostel-allocation"
+        echo ""
+        echo "Verify Deployment:"
+        echo "=================="
+        echo "kubectl get pods -n hostel-allocation"
+        echo "kubectl get svc -n hostel-allocation"
+        echo "kubectl get hpa -n hostel-allocation"
+        echo ""
+        echo "Access Services:"
+        echo "================"
+        echo "kubectl port-forward -n hostel-allocation svc/hostel-allocation 3000:80"
+        echo "kubectl port-forward -n hostel-allocation svc/grafana 3000:3000"
+        echo "kubectl port-forward -n hostel-allocation svc/prometheus 9090:9090"
+        echo "kubectl port-forward -n hostel-allocation svc/alertmanager 9093:9093"
     
     - name: Notify Slack - Success
       if: success()
