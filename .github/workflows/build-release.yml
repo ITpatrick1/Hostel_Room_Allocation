@@ -7,6 +7,10 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: read
+  security-events: write
+
 env:
   REGISTRY: docker.io
   IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.event.repository.name }}
@@ -51,9 +55,10 @@ jobs:
         output: 'trivy-results.sarif'
     
     - name: Upload Trivy Results
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: 'trivy-results.sarif'
+        category: 'trivy'
     
     - name: Notify - Security Scan Complete
       if: success()
