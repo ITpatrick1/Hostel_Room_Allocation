@@ -30,6 +30,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -53,6 +55,8 @@ jobs:
       uses: github/codeql-action/analyze@v4
       with:
         category: "/language:${{ matrix.language }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   security-scan:
     name: Trivy Security Scan
@@ -64,6 +68,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
@@ -80,4 +86,7 @@ jobs:
       with:
         sarif_file: 'trivy-results.sarif'
         category: 'trivy'
+        wait-for-processing: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       continue-on-error: true
