@@ -1,6 +1,76 @@
 name: Build and Release
 
-on:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+echo "  kubectl get hpa -n $NAMESPACE -w"echo "  kubectl get pods -n $NAMESPACE -w"echo "🔍 Monitor deployment:"echo ""echo "  AlertManager: kubectl port-forward -n $NAMESPACE svc/alertmanager 9093:9093"echo "  Grafana: kubectl port-forward -n $NAMESPACE svc/grafana 3000:3000"echo "  Prometheus: kubectl port-forward -n $NAMESPACE svc/prometheus 9090:9090"echo "  Application: kubectl port-forward -n $NAMESPACE svc/$DEPLOYMENT_NAME 3000:80"echo "📊 Accessing Services:"echo ""kubectl get svc -n $NAMESPACEecho "📍 Service Information:"echo ""echo "=================================="echo "✅ Deployment Complete!"echo ""# Get service informationkubectl apply -f monitoring/alertmanager-deployment.yamlkubectl apply -f monitoring/grafana-deployment.yamlkubectl apply -f monitoring/prometheus-deployment.yamlkubectl apply -f monitoring/alert-rules.yamlkubectl apply -f monitoring/prometheus-config.yamlecho "📊 Deploying monitoring stack..."# Deploy monitoring stackkubectl apply -f k8s/hpa.yamlecho "📈 Configuring auto-scaling..."# Deploy auto-scalingkubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACEecho "⏳ Waiting for deployment to be ready..."# Wait for deployment to be readykubectl apply -f k8s/service.yamlkubectl apply -f k8s/deployment.yamlecho "🎯 Deploying application..."# Deploy applicationkubectl apply -f k8s/configmap.yamlecho "⚙️  Deploying configurations..."# Deploy configurationskubectl apply -f k8s/namespace.yamlecho "📦 Creating namespace..."# Create namespace if it doesn't existfi    exit 1    echo "❌ kubectl is not installed. Please install kubectl first."if ! command -v kubectl &> /dev/null; then# Check if kubectl is installedecho ""echo "Image: $DOCKER_IMAGE"echo "Deployment: $DEPLOYMENT_NAME"echo "Namespace: $NAMESPACE"echo "=================================="echo "🚀 Starting Kubernetes Deployment"DOCKER_IMAGE="${1:-itpatrick/hostel_room_allocation:latest}"DEPLOYMENT_NAME="hostel-allocation"NAMESPACE="hostel-allocation"set -e# This script deploys the application to a Kubernetes cluster# Hostel Allocation Kubernetes Deployment Scripton:
   push:
     branches:
       - main
@@ -110,8 +180,23 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build-release
+    if: startsWith(github.ref, 'refs/tags/')
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Extract version
+      id: version
+      run: |
+        echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    
+    - name: Deploy to Kubernetes
+      run: |
+        echo "Deployment to Kubernetes cluster"
+        echo "Version: ${{ steps.version.outputs.VERSION }}"
+        # Add your kubectl commands here
+        # kubectl set image deployment/hostel-allocation \
+        #   hostel-allocation=itpatrick/hostel_room_allocation:${{ steps.version.outputs.VERSION }} \
+        #   -n hostel-allocation
     
     - name: Notify Slack - Success
       if: success()
@@ -119,13 +204,13 @@ jobs:
       with:
         payload: |
           {
-            "text": "✅ Hostel Allocation Build & Release Successful",
+            "text": "✅ Hostel Allocation Deployed Successfully",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "*Build Status:* ✅ Success\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Commit:* ${{ github.sha }}"
+                  "text": "*Deployment Status:* ✅ Success\n*Version:* ${{ steps.version.outputs.VERSION }}\n*Repository:* ${{ github.repository }}\n*Commit:* ${{ github.sha }}"
                 }
               }
             ]
@@ -139,13 +224,39 @@ jobs:
       with:
         payload: |
           {
-            "text": "❌ Hostel Allocation Build & Release Failed",
+            "text": "❌ Hostel Allocation Deployment Failed",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "*Build Status:* ❌ Failed\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Commit:* ${{ github.sha }}"
+                  "text": "*Deployment Status:* ❌ Failed\n*Version:* ${{ steps.version.outputs.VERSION }}\n*Repository:* ${{ github.repository }}\n*Commit:* ${{ github.sha }}"
+                }
+              }
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [build-release, deploy]
+    if: always()
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Notify Slack - Final Status
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        payload: |
+          {
+            "text": "🔔 Hostel Allocation Pipeline Complete",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*Pipeline Status:* ${{ needs.build-release.result == 'success' && '✅' || '❌' }}\n*Build:* ${{ needs.build-release.result }}\n*Deployment:* ${{ needs.deploy.result }}\n*Repository:* ${{ github.repository }}\n*Ref:* ${{ github.ref_name }}"
                 }
               }
             ]

@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hostel-allocation-ingress
+  namespace: hostel-allocation
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+  - hosts:
+    - hostel-allocation.example.com
+    secretName: hostel-allocation-tls
+  rules:
+  - host: hostel-allocation.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hostel-allocation
+            port:
+              number: 80
