@@ -26,7 +26,8 @@ const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV !== 'test') {
   sequelize.authenticate()
     .then(() => {
-      
+
+
       // eslint-disable-next-line no-console
       console.log('MySQL connected');
       return sequelize.sync({ alter: true });
@@ -46,3 +47,4 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 module.exports = app;
+
