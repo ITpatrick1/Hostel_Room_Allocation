@@ -2,12 +2,19 @@ name: Build and Release
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+  security-events: write
+
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ github.event.repository.name }}
+  IMAGE_NAME: ${{ secrets.DOCKER_HUB_USERNAME }}/hostel-room-allocation
+  IMAGE_NAME_LOWER: ${{ secrets.DOCKER_HUB_USERNAME }}/hostel-room-allocation
 
 jobs:
   code-quality:
