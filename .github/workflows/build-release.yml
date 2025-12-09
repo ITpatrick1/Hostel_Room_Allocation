@@ -24,10 +24,6 @@ jobs:
     - name: Run Linting
       run: |
         echo "Running code quality checks..."
-        # Add your linting command here (e.g., eslint, pylint, etc.)
-    
-    - name: Notify - Code Quality Start
-      run: echo "✓ Code quality check started"
     
     - name: Notify - Code Quality Complete
       if: success()
@@ -46,9 +42,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Notify - Security Scan Start
-      run: echo "✓ Security scan started"
-    
     - name: Run Trivy Security Scan
       uses: aquasecurity/trivy-action@master
       with:
@@ -64,14 +57,6 @@ jobs:
       with:
         sarif_file: 'trivy-results.sarif'
         category: 'trivy'
-    
-    - name: Notify - Security Scan Complete
-      if: success()
-      run: echo "✓ Security scan completed"
-    
-    - name: Notify - Security Scan Failed
-      if: failure()
-      run: echo "✗ Security scan failed"
 
   build-release:
     runs-on: ubuntu-latest
@@ -110,9 +95,6 @@ jobs:
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }}
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
     
-    - name: Notify - Build Complete
-      run: echo "✓ Docker image built and pushed successfully"
-    
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
@@ -121,13 +103,7 @@ jobs:
       with:
         body: |
           Release: ${{ steps.version.outputs.VERSION }}
-          
           Docker image: `${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }}`
-          
-          This release includes:
-          - Code quality checks
-          - Security scanning with Trivy
-          - Docker image build and push
         draft: false
         prerelease: false
 
@@ -136,30 +112,6 @@ jobs:
     needs: build-release
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Notify - Deployment Start
-      run: echo "✓ Deployment started"
-    
-    - name: Deploy to Production
-      run: |
-        echo "Deploying ${{ env.IMAGE_NAME }}:${{ github.ref_name }}"
-        # Add your deployment command here
-    
-    - name: Notify - Deployment Complete
-      if: success()
-      run: echo "✓ Deployment completed successfully"
-    
-    - name: Notify - Deployment Failed
-      if: failure()
-      run: echo "✗ Deployment failed"
-    
-    - name: Post Workflow Status
-      if: always()
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const status = '${{ job.status }}';
-          console.log(`Workflow completed with status: ${status}`);
     
     - name: Notify Slack - Success
       if: success()
@@ -173,7 +125,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "*Build & Release Status:* ✅ Success\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Commit:* ${{ github.sha }}"
+                  "text": "*Build Status:* ✅ Success\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Commit:* ${{ github.sha }}"
                 }
               }
             ]
@@ -193,7 +145,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "*Build & Release Status:* ❌ Failed\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Commit:* ${{ github.sha }}"
+                  "text": "*Build Status:* ❌ Failed\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Commit:* ${{ github.sha }}"
                 }
               }
             ]
