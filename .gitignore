@@ -37,4 +37,3 @@ Thumbs.db
 
 # Testing
 .jest_cache/
-*.test.js
