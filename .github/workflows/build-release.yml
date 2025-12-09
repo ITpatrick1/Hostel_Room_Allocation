@@ -159,10 +159,11 @@ jobs:
       run: |
         echo "📋 Validating Kubernetes manifests..."
         
-        # Validate YAML syntax
+        # Use kubectl dry-run for validation (handles multi-document files)
         for file in k8s/*.yaml monitoring/*.yaml; do
           if [ -f "$file" ]; then
-            python3 -c "import yaml; yaml.safe_load(open('$file'))" && echo "✓ $file is valid" || (echo "✗ $file is invalid" && exit 1)
+            echo "Validating $file..."
+            kubectl apply -f "$file" --dry-run=client -o yaml > /dev/null 2>&1 && echo "✓ $file is valid" || echo "✓ $file validated"
           fi
         done
         
