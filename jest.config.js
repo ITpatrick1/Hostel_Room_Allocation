@@ -1,11 +1,11 @@
 module.exports = {
   testEnvironment: 'node',
-  coveragePathIgnorePatterns: ['/node_modules/'],
-  testMatch: ['**/*.test.js'],
+  testMatch: ['<rootDir>/tests/**/*.test.js'],
   collectCoverageFrom: [
     'src/**/*.js',
     '!src/app.js',
   ],
+  coveragePathIgnorePatterns: ['/node_modules/'],
   coverageThreshold: {
     global: {
       branches: 40,
@@ -15,5 +15,8 @@ module.exports = {
     }
   },
   testTimeout: 10000,
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  forceExit: true,
+  detectOpenHandles: true,
+  moduleFileExtensions: ['js', 'json']
 };

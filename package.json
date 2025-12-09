@@ -6,10 +6,10 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "test": "jest --coverage",
+    "test": "jest --forceExit --detectOpenHandles",
     "test:watch": "jest --watch",
-    "test:ci": "jest --ci --coverage --maxWorkers=2",
-    "lint": "eslint src --max-warnings=5",
+    "test:ci": "jest --ci --coverage --detectOpenHandles --forceExit",
+    "lint": "eslint src --max-warnings=0",
     "lint:fix": "eslint src --fix",
     "build": "echo 'Build complete'",
     "docker:build": "docker build -t hostel-allocation:latest .",
