@@ -13,6 +13,7 @@ module.exports = {
       lines: 50,
       statements: 50
     }
+    
   },
   testTimeout: 10000,
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
