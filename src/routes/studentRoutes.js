@@ -53,4 +53,41 @@ router.get('/allocations', async (_req, res) => {
   }
 });
 
+// Get all students
+router.get('/list', async (_req, res) => {
+  try {
+    const students = await Student.findAll({
+      include: [
+        {
+          model: Allocation,
+          include: [{ model: Room }]
+        }
+      ]
+    });
+    res.json(students);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Get student by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const student = await Student.findByPk(req.params.id, {
+      include: [
+        {
+          model: Allocation,
+          include: [{ model: Room }]
+        }
+      ]
+    });
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+    res.json(student);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 module.exports = router;
