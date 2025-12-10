@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Room Allocation System - Architecture Overview</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 0;
+            font-size: 32px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px 0;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4CAF50;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .feature-card.devops {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .feature-card.frontend {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .feature-card.backend {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .feature-card.monitoring {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .feature-card h3 {
+            margin-top: 0;
+            font-size: 16px;
+        }
+        .feature-card ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .feature-card li {
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        .diagram {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px dashed #bdc3c7;
+            margin: 20px 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .flow-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .flow-arrow {
+            font-size: 24px;
+            color: #667eea;
+            flex: 0 0 auto;
+        }
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .tech-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            font-size: 13px;
+        }
+        .tech-item strong {
+            display: block;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .architecture-image {
+            width: 100%;
+            max-width: 1000px;
+            margin: 30px auto;
+            display: block;
+        }
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏨 Hostel Room Allocation System</h1>
+        <p class="subtitle">Complete DevOps Implementation - System Overview</p>
+
+        <div class="section-title">📋 System Architecture Overview</div>
+        <div class="diagram">
+            <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background -->
+                <rect width="1200" height="600" fill="#f8f9fa"/>
+                
+                <!-- Title -->
+                <text x="600" y="30" font-size="24" font-weight="bold" text-anchor="middle" fill="#2c3e50">
+                    End-to-End DevOps Pipeline Architecture
+                </text>
+                
+                <!-- Planning Phase -->
+                <rect x="20" y="80" width="140" height="120" fill="#667eea" rx="8"/>
+                <text x="90" y="110" font-size="14" font-weight="bold" text-anchor="middle" fill="white">Phase 1</text>
+                <text x="90" y="130" font-size="12" text-anchor="middle" fill="white">PLAN</text>
+                <text x="90" y="155" font-size="11" text-anchor="middle" fill="white">Requirements</text>
+                <text x="90" y="170" font-size="11" text-anchor="middle" fill="white">Architecture</text>
+                <text x="90" y="185" font-size="11" text-anchor="middle" fill="white">Design</text>
+                
+                <!-- Code Phase -->
+                <rect x="180" y="80" width="140" height="120" fill="#4facfe" rx="8"/>
+                <text x="250" y="110" font-size="14" font-weight="bold" text-anchor="middle" fill="white">Phase 2</text>
+                <text x="250" y="130" font-size="12" text-anchor="middle" fill="white">CODE</text>
+                <text x="250" y="155" font-size="11" text-anchor="middle" fill="white">Node.js</text>
+                <text x="250" y="170" font-size="11" text-anchor="middle" fill="white">Express</text>
+                <text x="250" y="185" font-size="11" text-anchor="middle" fill="white">MySQL</text>
+                
+                <!-- Build Phase -->
+                <rect x="340" y="80" width="140" height="120" fill="#43e97b" rx="8"/>
+                <text x="410" y="110" font-size="14" font-weight="bold" text-anchor="middle" fill="white">Phase 3</text>
+                <text x="410" y="130" font-size="12" text-anchor="middle" fill="white">BUILD</text>
+                <text x="410" y="155" font-size="11" text-anchor="middle" fill="white">Docker</text>
+                <text x="410" y="170" font-size="11" text-anchor="middle" fill="white">Multi-stage</text>
+                <text x="410" y="185" font-size="11" text-anchor="middle" fill="white">GitHub</text>
+                
+                <!-- Test Phase -->
+                <rect x="500" y="80" width="140" height="120" fill="#f093fb" rx="8"/>
+                <text x="570" y="110" font-size="14" font-weight="bold" text-anchor="middle" fill="white">Phase 4</text>
+                <text x="570" y="130" font-size="12" text-anchor="middle" fill="white">TEST</text>
+                <text x="570" y="155" font-size="11" text-anchor="middle" fill="white">Jest</text>
+                <text x="570" y="170" font-size="11" text-anchor="middle" fill="white">4/4 Pass</text>
+                <text x="570" y="185" font-size="11" text-anchor="middle" fill="white">82.35% Coverage</text>
+                
+                <!-- Release Phase -->
+                <rect x="660" y="80" width="140" height="120" fill="#fa709a" rx="8"/>
+                <text x="730" y="110" font-size="14" font-weight="bold" text-anchor="middle" fill="white">Phase 5</text>
+                <text x="730" y="130" font-size="12" text-anchor="middle" fill="white">RELEASE</text>
+                <text x="730" y="155" font-size="11" text-anchor="middle" fill="white">Semantic Ver</text>
+                <text x="730" y="170" font-size="11" text-anchor="middle" fill="white">v1.7.0</text>
+                <text x="730" y="185" font-size="11" text-anchor="middle" fill="white">Registry Push</text>
+                
+                <!-- Deploy Phase -->
+                <rect x="820" y="80" width="140" height="120" fill="#fee140" rx="8"/>
+                <text x="890" y="110" font-size="14" font-weight="bold" text-anchor="middle" fill="white">Phase 6</text>
+                <text x="890" y="130" font-size="12" text-anchor="middle" fill="white">DEPLOY</text>
+                <text x="890" y="155" font-size="11" text-anchor="middle" fill="white">Kubernetes</text>
+                <text x="890" y="170" font-size="11" text-anchor="middle" fill="white">Rolling Update</text>
+                <text x="890" y="185" font-size="11" text-anchor="middle" fill="white">Zero Downtime</text>
+                
+                <!-- Operate Phase -->
+                <rect x="980" y="80" width="110" height="120" fill="#4facfe" rx="8"/>
+                <text x="1035" y="110" font-size="14" font-weight="bold" text-anchor="middle" fill="white">Phase 7</text>
+                <text x="1035" y="130" font-size="12" text-anchor="middle" fill="white">OPERATE</text>
+                <text x="1035" y="155" font-size="11" text-anchor="middle" fill="white">24/7 Ready</text>
+                <text x="1035" y="170" font-size="11" text-anchor="middle" fill="white">Service Mesh</text>
+                <text x="1035" y="185" font-size="11" text-anchor="middle" fill="white">Health Checks</text>
+                
+                <!-- Arrows between phases -->
+                <line x1="160" y1="140" x2="180" y2="140" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+                <line x1="320" y1="140" x2="340" y2="140" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+                <line x1="480" y1="140" x2="500" y2="140" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+                <line x1="640" y1="140" x2="660" y2="140" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+                <line x1="800" y1="140" x2="820" y2="140" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+                <line x1="960" y1="140" x2="980" y2="140" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)"/>
+                
+                <!-- Arrow marker -->
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#2c3e50"/>
+                    </marker>
+                </defs>
+                
+                <!-- Monitoring & Operations (Phase 8) -->
+                <rect x="50" y="300" width="1100" height="200" fill="none" stroke="#f44336" stroke-width="2" stroke-dasharray="5,5" rx="8"/>
+                <text x="600" y="320" font-size="14" font-weight="bold" text-anchor="middle" fill="#f44336">
+                    Phase 8: MONITOR &amp; MAINTAIN (Continuous)
+                </text>
+                
+                <!-- Monitoring Components -->
+                <rect x="80" y="350" width="160" height="120" fill="#f44336" rx="6" opacity="0.9"/>
+                <text x="160" y="375" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Prometheus</text>
+                <text x="160" y="395" font-size="11" text-anchor="middle" fill="white">• Metrics</text>
+                <text x="160" y="410" font-size="11" text-anchor="middle" fill="white">• Scraping</text>
+                <text x="160" y="425" font-size="11" text-anchor="middle" fill="white">• Alerting</text>
+                <text x="160" y="440" font-size="11" text-anchor="middle" fill="white">• Storage</text>
+                <text x="160" y="455" font-size="11" text-anchor="middle" fill="white">• Time Series DB</text>
+                
+                <rect x="300" y="350" width="160" height="120" fill="#ff9800" rx="6" opacity="0.9"/>
+                <text x="380" y="375" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Grafana</text>
+                <text x="380" y="395" font-size="11" text-anchor="middle" fill="white">• Dashboards</text>
+                <text x="380" y="410" font-size="11" text-anchor="middle" fill="white">• Visualization</text>
+                <text x="380" y="425" font-size="11" text-anchor="middle" fill="white">• Real-time</text>
+                <text x="380" y="440" font-size="11" text-anchor="middle" fill="white">• Analytics</text>
+                <text x="380" y="455" font-size="11" text-anchor="middle" fill="white">• Alerting</text>
+                
+                <rect x="520" y="350" width="160" height="120" fill="#9c27b0" rx="6" opacity="0.9"/>
+                <text x="600" y="375" font-size="12" font-weight="bold" text-anchor="middle" fill="white">AlertManager</text>
+                <text x="600" y="395" font-size="11" text-anchor="middle" fill="white">• Notifications</text>
+                <text x="600" y="410" font-size="11" text-anchor="middle" fill="white">• Routing</text>
+                <text x="600" y="425" font-size="11" text-anchor="middle" fill="white">• Grouping</text>
+                <text x="600" y="440" font-size="11" text-anchor="middle" fill="white">• Deduplication</text>
+                <text x="600" y="455" font-size="11" text-anchor="middle" fill="white">• Multi-channel</text>
+                
+                <rect x="740" y="350" width="160" height="120" fill="#2196f3" rx="6" opacity="0.9"/>
+                <text x="820" y="375" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Kubernetes</text>
+                <text x="820" y="395" font-size="11" text-anchor="middle" fill="white">• HPA</text>
+                <text x="820" y="410" font-size="11" text-anchor="middle" fill="white">• 3-10 Replicas</text>
+                <text x="820" y="425" font-size="11" text-anchor="middle" fill="white">• Auto-scaling</text>
+                <text x="820" y="440" font-size="11" text-anchor="middle" fill="white">• Health Checks</text>
+                <text x="820" y="455" font-size="11" text-anchor="middle" fill="white">• Load Balancing</text>
+                
+                <rect x="960" y="350" width="160" height="120" fill="#4CAF50" rx="6" opacity="0.9"/>
+                <text x="1040" y="375" font-size="12" font-weight="bold" text-anchor="middle" fill="white">GitHub Actions</text>
+                <text x="1040" y="395" font-size="11" text-anchor="middle" fill="white">• CI/CD</text>
+                <text x="1040" y="410" font-size="11" text-anchor="middle" fill="white">• Automation</text>
+                <text x="1040" y="425" font-size="11" text-anchor="middle" fill="white">• 6 Jobs</text>
+                <text x="1040" y="440" font-size="11" text-anchor="middle" fill="white">• Testing</text>
+                <text x="1040" y="455" font-size="11" text-anchor="middle" fill="white">• Deployment</text>
+            </svg>
+        </div>
+
+        <div class="section-title">🎯 Key Features & Capabilities</div>
+        <div class="features-grid">
+            <div class="feature-card frontend">
+                <h3>🎨 Professional Frontend</h3>
+                <ul>
+                    <li>Responsive UI (Desktop, Tablet, Mobile)</li>
+                    <li>Student Dashboard</li>
+                    <li>Admin Panel</li>
+                    <li>Animated Backgrounds</li>
+                    <li>Real-time Updates</li>
+                    <li>Modern Design</li>
+                </ul>
+            </div>
+            <div class="feature-card backend">
+                <h3>⚙️ Robust Backend</h3>
+                <ul>
+                    <li>Node.js + Express</li>
+                    <li>Sequelize ORM</li>
+                    <li>RESTful APIs</li>
+                    <li>MySQL Database</li>
+                    <li>Request Validation</li>
+                    <li>Error Handling</li>
+                </ul>
+            </div>
+            <div class="feature-card devops">
+                <h3>🚀 DevOps Pipeline</h3>
+                <ul>
+                    <li>GitHub Actions CI/CD</li>
+                    <li>Docker Containerization</li>
+                    <li>Kubernetes Orchestration</li>
+                    <li>Automated Testing</li>
+                    <li>Rolling Deployments</li>
+                    <li>Zero Downtime Updates</li>
+                </ul>
+            </div>
+            <div class="feature-card monitoring">
+                <h3>📊 Monitoring & Observability</h3>
+                <ul>
+                    <li>Prometheus Metrics</li>
+                    <li>Grafana Dashboards</li>
+                    <li>AlertManager Notifications</li>
+                    <li>HPA Auto-scaling</li>
+                    <li>Health Checks</li>
+                    <li>Real-time Alerts</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-title">📈 System Statistics</div>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-label">Test Coverage</div>
+                <div class="stat-number">82.35%</div>
+                <div class="stat-label">4/4 Tests Passing</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Code Metrics</div>
+                <div class="stat-number">~500</div>
+                <div class="stat-label">Lines of Frontend Code</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Performance</div>
+                <div class="stat-number">&lt;100ms</div>
+                <div class="stat-label">API Response Time</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Scaling</div>
+                <div class="stat-number">3-10</div>
+                <div class="stat-label">Kubernetes Pods (HPA)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Version</div>
+                <div class="stat-number">v1.7.0</div>
+                <div class="stat-label">Latest Release</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Deployment</div>
+                <div class="stat-number">~300MB</div>
+                <div class="stat-label">Docker Image Size</div>
+            </div>
+        </div>
+
+        <div class="section-title">🔄 CI/CD Pipeline Flow</div>
+        <div class="flow-diagram">
+            <div class="flow-box">Code Push</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">Test</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">Build</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">Push</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">Deploy</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">Monitor</div>
+        </div>
+
+        <div class="section-title">🛠️ Technology Stack</div>
+        <div class="tech-stack">
+            <div class="tech-item">
+                <strong>Frontend</strong>
+                HTML5, CSS3, JavaScript, FontAwesome
+            </div>
+            <div class="tech-item">
+                <strong>Backend</strong>
+                Node.js, Express.js, Sequelize ORM
+            </div>
+            <div class="tech-item">
+                <strong>Database</strong>
+                MySQL, SQLite (Dev)
+            </div>
+            <div class="tech-item">
+                <strong>Containerization</strong>
+                Docker, Docker Compose
+            </div>
+            <div class="tech-item">
+                <strong>Orchestration</strong>
+                Kubernetes, Helm Charts
+            </div>
+            <div class="tech-item">
+                <strong>CI/CD</strong>
+                GitHub Actions, Semantic Versioning
+            </div>
+            <div class="tech-item">
+                <strong>Monitoring</strong>
+                Prometheus, Grafana, AlertManager
+            </div>
+            <div class="tech-item">
+                <strong>Testing</strong>
+                Jest, Node Test Runner
+            </div>
+            <div class="tech-item">
+                <strong>Version Control</strong>
+                Git, GitHub
+            </div>
+            <div class="tech-item">
+                <strong>Infrastructure</strong>
+                Kubernetes Cluster, HPA, Ingress
+            </div>
+        </div>
+
+        <div class="section-title">✨ System Capabilities</div>
+        <div class="flow-diagram" style="flex-direction: column; align-items: stretch;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div class="flow-box" style="flex: 0 0 auto; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;">✓</div>
+                <span><strong>Student Registration:</strong> Sign up as student, register in system, manage profile</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div class="flow-box" style="flex: 0 0 auto; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;">✓</div>
+                <span><strong>Room Management:</strong> Create rooms, view availability, manage capacity</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div class="flow-box" style="flex: 0 0 auto; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;">✓</div>
+                <span><strong>Room Allocation:</strong> Request allocation, admin approval, manual assignment</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div class="flow-box" style="flex: 0 0 auto; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;">✓</div>
+                <span><strong>Dashboard Analytics:</strong> Real-time statistics, occupancy rates, trends</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="flow-box" style="flex: 0 0 auto; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;">✓</div>
+                <span><strong>Auto-scaling:</strong> Kubernetes HPA scales 3-10 pods based on demand</span>
+            </div>
+        </div>
+
+        <div class="section-title">🎓 DevOps Phases Completed</div>
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px;">
+            <p><strong>Phase 1 - Plan:</strong> Requirements analysis, architecture design, tool selection</p>
+            <p><strong>Phase 2 - Code:</strong> Node.js backend with Express, MySQL database, RESTful APIs</p>
+            <p><strong>Phase 3 - Build:</strong> Docker multi-stage build, optimized images, GitHub Actions</p>
+            <p><strong>Phase 4 - Test:</strong> Jest framework, 4/4 tests passing, 82.35% code coverage</p>
+            <p><strong>Phase 5 - Release:</strong> Semantic versioning (v1.7.0), tag releases, Docker registry</p>
+            <p><strong>Phase 6 - Deploy:</strong> Kubernetes rolling updates, zero-downtime deployments, ingress</p>
+            <p><strong>Phase 7 - Operate:</strong> 24/7 service availability, health checks, service management</p>
+            <p><strong>Phase 8 - Monitor:</strong> Prometheus metrics, Grafana dashboards, AlertManager, HPA auto-scaling</p>
+        </div>
+
+        <div class="section-title">🚀 Getting Started</div>
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; border-left: 4px solid #4CAF50;">
+            <h4 style="margin-top: 0;">Local Development:</h4>
+            <pre style="background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 8px; overflow-x: auto;">
+<strong>npm install</strong>       # Install dependencies
+<strong>npm start</strong>        # Start server on port 5000
+<strong>npm test</strong>         # Run test suite
+<strong>npm run dev</strong>      # Development mode with auto-reload</pre>
+
+            <h4>Docker Deployment:</h4>
+            <pre style="background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 8px; overflow-x: auto;">
+<strong>docker build</strong> -t hostel-allocation .
+<strong>docker run</strong> -p 5000:5000 hostel-allocation</pre>
+
+            <h4>Kubernetes Deployment:</h4>
+            <pre style="background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 8px; overflow-x: auto;">
+<strong>kubectl apply</strong> -f k8s/
+<strong>kubectl apply</strong> -f monitoring/</pre>
+        </div>
+    </div>
+</body>
+</html>
